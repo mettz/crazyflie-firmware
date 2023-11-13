@@ -82,8 +82,8 @@ static rateSupervisor_t rateSupervisorContext;
 static bool rateWarningDisplayed = false;
 SemaphoreHandle_t xRateSupervisorSemaphore;
 
-#ifdef BACKPROP_TOOLS_CONTROLLER
-static bool backprop_tools_overwrite_stabilizer = false;
+#ifdef RL_TOOLS_CONTROLLER
+static bool rl_tools_overwrite_stabilizer = false;
 #endif
 
 static struct {
@@ -122,9 +122,9 @@ static struct {
   int16_t az;
 } setpointCompressed;
 
-#ifdef BACKPROP_TOOLS_CONTROLLER
-void set_backprop_tools_overwrite_stabilizer(bool overwrite){
-  backprop_tools_overwrite_stabilizer = overwrite;
+#ifdef RL_TOOLS_CONTROLLER
+void set_rl_tools_overwrite_stabilizer(bool overwrite){
+  rl_tools_overwrite_stabilizer = overwrite;
 }
 #endif
 
@@ -195,8 +195,8 @@ void stabilizerInit(StateEstimatorType estimator)
   collisionAvoidanceInit();
   estimatorType = stateEstimatorGetType();
   controllerType = controllerGetType();
-  #ifdef BACKPROP_TOOLS_CONTROLLER
-  backprop_tools_overwrite_stabilizer = false;
+  #ifdef RL_TOOLS_CONTROLLER
+  rl_tools_overwrite_stabilizer = false;
   #endif
 
   STATIC_MEM_TASK_CREATE(stabilizerTask, stabilizerTask, STABILIZER_TASK_NAME, NULL, STABILIZER_TASK_PRI);
