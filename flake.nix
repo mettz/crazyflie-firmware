@@ -3,19 +3,21 @@
 
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:brianmcgillion/nixpkgs/crazyflie-add";
   };
 
-  outputs = {
-    nixpkgs,
-    flake-utils,
-    ...
-  }:
-    flake-utils.lib.eachDefaultSystem
-    (
-      system: let
+  outputs =
+    {
+      nixpkgs,
+      flake-utils,
+      ...
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
+      let
         pkgs = nixpkgs.legacyPackages.${system};
-      in {
+      in
+      {
         formatter = pkgs.alejandra;
 
         devShells.default = pkgs.mkShell {
@@ -23,8 +25,12 @@
             gcc
             gnumake
             gcc-arm-embedded
-            python3
-            git
+            cfclient
+            (python3.withPackages (
+              p: with p; [
+                cflib
+              ]
+            ))
           ];
         };
       }
