@@ -67,9 +67,11 @@ static sensorData_t sensorData;
 static state_t state;
 static control_t control;
 
-static motors_thrust_uncapped_t motorThrustUncapped;
 static motors_thrust_uncapped_t motorThrustBatCompUncapped;
+#ifndef RL_TOOLS_CONTROLLER
+static motors_thrust_uncapped_t motorThrustUncapped;
 static motors_thrust_pwm_t motorPwm;
+#endif
 
 // For scratch storage - never logged or passed to other subsystems.
 static setpoint_t tempSetpoint;
@@ -205,6 +207,7 @@ bool stabilizerTest(void)
   return pass;
 }
 
+#ifndef RL_TOOLS_CONTROLLER
 static void batteryCompensation(const motors_thrust_uncapped_t* motorThrustUncapped, motors_thrust_uncapped_t* motorThrustBatCompUncapped)
 {
   // Low pass on the BatteryVoltage
@@ -225,6 +228,7 @@ static void setMotorRatios(const motors_thrust_pwm_t* motorPwm)
   motorsSetRatio(MOTOR_M3, motorPwm->motors.m3);
   motorsSetRatio(MOTOR_M4, motorPwm->motors.m4);
 }
+#endif
 
 static void updateStateEstimatorAndControllerTypes() {
   if (stateEstimatorGetType() != estimatorType) {
@@ -238,6 +242,7 @@ static void updateStateEstimatorAndControllerTypes() {
   }
 }
 
+#ifndef RL_TOOLS_CONTROLLER
 static void logCapWarning(const bool isCapped) {
   #ifdef CONFIG_LOG_MOTOR_CAP_WARNING
   static uint32_t nextReportTick = 0;
@@ -259,6 +264,7 @@ static void controlMotors(const control_t* control) {
   logCapWarning(isCapped);
   setMotorRatios(&motorPwm);
 }
+#endif
 
 void rateSupervisorTask(void *pvParameters) {
   while (1) {
