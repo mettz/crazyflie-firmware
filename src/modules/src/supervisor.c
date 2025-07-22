@@ -49,6 +49,8 @@
 #include "planner.h"
 #include "crtp_commander_high_level.h"
 
+#define STABILIZER_WATCHDOG_DISABLE
+
 #define DEFAULT_EMERGENCY_STOP_WATCHDOG_TIMEOUT (M2T(1000))
 
 // The minimum time (in ms) we need to see low thrust before saying that we are not flying anymore
@@ -336,6 +338,7 @@ static supervisorConditionBits_t updateAndPopulateConditions(SupervisorMem_t* th
     }
   }
 
+#ifndef STABILIZER_WATCHDOG_DISABLE
   const uint32_t setpointAge = currentTick - setpoint->timestamp;
   if (setpointAge > COMMANDER_WDT_TIMEOUT_STABILIZE) {
     conditions |= SUPERVISOR_CB_COMMANDER_WDT_WARNING;
@@ -343,6 +346,7 @@ static supervisorConditionBits_t updateAndPopulateConditions(SupervisorMem_t* th
   if (setpointAge > COMMANDER_WDT_TIMEOUT_SHUTDOWN) {
     conditions |= SUPERVISOR_CB_COMMANDER_WDT_TIMEOUT;
   }
+#endif
 
   if (!checkEmergencyStopWatchdog(currentTick)) {
     conditions |= SUPERVISOR_CB_EMERGENCY_STOP;
