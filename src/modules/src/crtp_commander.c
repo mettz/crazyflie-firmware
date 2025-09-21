@@ -32,8 +32,8 @@
 #include "commander.h"
 #include "crtp.h"
 
-#ifdef RL_TOOLS_CONTROLLER
-#include "rl_tools_controller.h"
+#ifdef ISAACFLIE_CONTROLLER
+#include "isaacflie.h"
 #endif
 
 
@@ -95,8 +95,8 @@ void learnedControllerDecoder(const void *data, size_t datalen)
 {
   ASSERT(datalen == sizeof(struct learnedControllerPacket));
   // const struct learnedControllerPacket *values = data;
-#ifdef RL_TOOLS_CONTROLLER
-  rl_tools_controller_packet_received();
+#ifdef ISAACFLIE_CONTROLLER
+  isaacflie_controller_packet_received();
 #endif
 }
 
